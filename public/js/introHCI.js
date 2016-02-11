@@ -27,12 +27,37 @@ function addProjectDetails(e) {
 	var idNumber = projectID.substr('project'.length);
 
 	console.log("User clicked on project " + idNumber);
+	$.get("/project/" + idNumber, addProjDetail);
+	console.log("Calling URL for: /project/" + idNumber);
 }
+
+function addProjDetail(result) {
+	console.log(result);
+	var idNumber = result['id'];
+	var projHTML = '<img src="' + result['image'] + '" class="detailImg">' +
+	 '<p>' + result['summary'] + '</p>' + 
+	 '<p><small>' + result['date'] + '</small></p>';
+	$("#project" + idNumber + " .details").html(projHTML);
+}
+
 
 /*
  * Make an AJAX call to retrieve a color palette for the site
  * and apply it
  */
 function randomizeColors(e) {
+	e.preventDefault();
 	console.log("User clicked on color button");
+	$.get("/palette/", randomColor);
+
+}
+
+function randomColor(result) {
+	var hex = result['colors'];
+	var colors = hex['hex'];
+	$('body').css('background-color', colors[0]);
+	$('.thumbnail').css('background-color', colors[1]);
+	$('h1, h2, h3, h4, h5, h5').css('color', colors[2]);
+	$('p').css('color', colors[3]);
+	$('.project img').css('opacity', .75);
 }
